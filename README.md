@@ -3,7 +3,7 @@
   <a href="https://github.com/MayankPandey01/Jira-Lens/"><img width="750" height="250" src="https://user-images.githubusercontent.com/29165227/141689309-961fa172-5c15-4476-bd84-1c80899a98dc.png"></a>
 </h1>
 
-<h4 align="center">Fast and customisable vulnerability scanner For JIRA.</h4>
+<h4 align="center">Fast and customizable vulnerability scanner For JIRA.</h4>
 
 <p align="center">
 <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg"></a>
