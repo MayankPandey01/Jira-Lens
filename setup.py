@@ -1,5 +1,11 @@
 from pathlib import Path
 from setuptools import setup
+import io
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+
+with io.open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    desc = f.read()
 
 version = Path("Jira-Lens/_version.py").read_text(encoding="utf-8")
 about = {}
@@ -11,9 +17,9 @@ setup(name='Jira-Lens',
       description='Jira-Lens : JIRA Security Auditing Tool',
       author='Mayank Pandey',
       author_email='mayankraj956@gmail.com',
+      long_description =  desc,
+      long_description_content_type = 'text/markdown',
       url='https://github.com/MayankPandey01/Jira-Lens/',
-      long_description = file: README.md
-      long_description_content_type = text/markdown
       download_url = 'https://github.com/MayankPandey01/Jira-Lens/archive/refs/tags/v1.0.0.tar.gz', 
       install_requires=["progressbar","requests","argparse","colorama"],
      
