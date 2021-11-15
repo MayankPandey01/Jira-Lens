@@ -12,6 +12,8 @@ setup(name='Jira-Lens',
       author='Mayank Pandey',
       author_email='mayankraj956@gmail.com',
       url='https://github.com/MayankPandey01/Jira-Lens/',
+      long_description = file: README.md
+      long_description_content_type = text/markdown
       download_url = 'https://github.com/MayankPandey01/Jira-Lens/archive/refs/tags/v1.0.0.tar.gz', 
       install_requires=["progressbar","requests","argparse","colorama"],
      
