@@ -37,7 +37,7 @@ Jira-Lens can be easily  used from the command line
  
  - `-u` : To Provide a Single URL of JIRA Instance for Testing
  - `-f` : Path of File Containing List of URL's of JIRA Instance, properly Formatted and 1 url par Line
- - `-o` : To Provide a Custom Output Folder Location [ ==default= output/==]
+ - `-o` : To Provide a Custom Output Folder Location [ **default= output/**]
  
 
 
