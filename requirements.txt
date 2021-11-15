@@ -1,0 +1,4 @@
+colorama==0.4.4
+progressbar33==2.4
+requests==2.24.0
+argparse
