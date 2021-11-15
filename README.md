@@ -13,7 +13,7 @@
 <a href="https://pypi.org/project/Jira-Lens/"><img src="https://img.shields.io/pypi/pyversions/Jira-Lens"></a>
 <a href="https://pypi.python.org/pypi/ansicolortags/"><img src="https://img.shields.io/pypi/l/ansicolortags.svg"></a>
 <a href="https://pypi.org/project/Jira-Lens/"><img src="https://pepy.tech/badge/Jira-Lens/month"></a>
-<a href="https://github.com/MayankPandey01/Jira-Lens"><img src="https://badge.fury.io/gh/Naereen%2FStrapDown.js.svg"></a>
+<a href="https://github.com/MayankPandey01/Jira-Lens"><img src="https://badge.fury.io/py/Jira-Lens.svg"></a>
 <a href="https://github.com/ellerbrock/open-source-badges/"><img src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103"></a>  
 </p>
 
