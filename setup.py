@@ -11,8 +11,8 @@ setup(name='Jira-Lens',
       description='Jira-Lens : JIRA Security Auditing Tool',
       author='Mayank Pandey',
       author_email='mayankraj956@gmail.com',
-      url='',
-      download_url = 'https://github.com/user/reponame/archive/v_01.tar.gz', 
+      url='https://github.com/MayankPandey01/Jira-Lens/',
+      download_url = 'https://github.com/MayankPandey01/Jira-Lens/archive/refs/tags/v1.0.0.tar.gz', 
       install_requires=["progressbar","requests","argparse","colorama"],
      
     classifiers=[
