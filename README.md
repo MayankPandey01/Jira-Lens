@@ -26,6 +26,7 @@ This tool Performs 25+ Checks including CVE's and Multiple Disclosures on the Pr
 
 # 🚀 Usage
 Jira-Lens can be easily  used from the command line 
+- Clone this Repo Using ` git clone https://github.com/MayankPandey01/Jira-Lens.git`
 - Complete the setup using `python3 setup.py install`
 - `python3 Jira-Lens.py -u {URL}`
 
