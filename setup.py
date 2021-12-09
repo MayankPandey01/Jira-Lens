@@ -21,7 +21,7 @@ setup(name='Jira-Lens',
       long_description_content_type = 'text/markdown',
       url='https://github.com/MayankPandey01/Jira-Lens/',
       download_url = 'https://github.com/MayankPandey01/Jira-Lens/archive/refs/tags/v1.0.1.tar.gz', 
-      install_requires=["progressbar","requests","argparse","colorama"],
+      install_requires=["progressbar","requests","colorama"],
      
     classifiers=[
         "Development Status :: 5 - Production/Stable",
