@@ -23,7 +23,7 @@ def clean_url(url):
         
 
 def detect_version(base_url):
-    r=requests.get(f"{base_url}/rest/api/latest/serverInfo",allow_redirects=False)#,headers=headers)
+    r=requests.get(f"{base_url}/rest/api/latest/serverInfo",allow_redirects=False,headers=headers)
     try:
         server_data=json.loads(str(r.content,'utf-8'))
         print('\n')
@@ -599,6 +599,7 @@ def main():
         parser = argparse.ArgumentParser(description="Jira-Lens : Jira Security Auditing Tool") 
         parser.add_argument("-u","--url", help="Target URL",dest='url')
         parser.add_argument('-f','--file',type=argparse.FileType('r'),dest='input_file')
+        parser.add_argument('-c','--cookie',help="Provide authentication cookie(s)")
         parser.add_argument('-o','--output',help="Output Folder for files",default="output/",required=False)
          
         args= parser.parse_args()
@@ -616,6 +617,9 @@ def main():
         if args.url != None and args.input_file!=None:
             print(f"{RED}\tMultiple Inputs Provided\n\tUse Either -u(URL) or -f(FILE) as Input")
             sys.exit(0)
+
+        if args.cookie:
+            headers['Cookie'] = args.cookie
     
         if args.input_file:
             print(f" {CYAN}Input File Provided : {args.input_file.name}{RESET}\n\n")
