@@ -43,7 +43,7 @@ Jira-Lens can be easily  used from the command line
 git clone https://github.com/MayankPandey01/Jira-Lens.git
 cd Jira-Lens
 docker build . -t jira-lens
-docker run jira-lens <url>
+docker run -v "$(PWD)/Jira-Lens/output":/app/Jira-Lens/output jira-lens <url>
 ```
 
 # 🔧Installation
