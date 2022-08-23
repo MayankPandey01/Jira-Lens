@@ -40,6 +40,14 @@ Jira-Lens can be easily  used from the command line
  - `-i` : To disable ssl certificate verification
 
 
+# Docker setup and usage
+```
+git clone https://github.com/MayankPandey01/Jira-Lens.git
+cd Jira-Lens
+docker build . -t jira-lens
+docker run -v "$(PWD)/Jira-Lens/output":/app/Jira-Lens/output jira-lens <url>
+```
+
 # 🔧Installation
 
 ## 🔨 Using pip
