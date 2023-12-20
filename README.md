@@ -38,7 +38,7 @@ cd Jira-Lens
 ```console
 python3 setup.py install
 ```
-- Finally run the following command in the command line to check whether everything is working fine or not. The following command if successful will display the help menu of the toolgit clone https://github.com/MayankPandey01/Jira-Lens.git.
+- Finally run the following command in the command line to check whether everything is working fine or not.
 ```console
 python3 Jira-Lens.py -u {URL}
 ```
