@@ -41,7 +41,7 @@ Jira-Lens can be easily  used from the command line
 
 
 # Docker setup and usage
-```
+```console
 git clone https://github.com/MayankPandey01/Jira-Lens.git
 cd Jira-Lens
 docker build . -t jira-lens
@@ -52,11 +52,15 @@ docker run -v "$(PWD)/Jira-Lens/output":/app/Jira-Lens/output jira-lens <url>
 
 ## 🔨 Using pip
 
-```$ pip install Jira-Lens```
+```console
+pip install Jira-Lens
+```
 
 ## 🔨 Using Git
-- ` git clone https://github.com/MayankPandey01/Jira-Lens.git`
-- After Installation run the `setup.py` file to set up the tool.
+```console
+git clone https://github.com/MayankPandey01/Jira-Lens.git
+```
+- After Installation process, run the **setup.py** file to set up the tool.
 
 ## 🧪 Recommended Python Version:
 - This Tool Only Supports Python 3.
