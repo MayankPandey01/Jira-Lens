@@ -34,13 +34,18 @@ Change the directory using
 ```console
 cd Jira-Lens
 ```
-- Complete the setup using 
+- You can complete the setup either using this
 ```console
-python3 setup.py install
+sudo python3 setup.py install
+pip3 install progressbar colorama requests
+```
+**OR**
+```console
+pip3 install -r requirements.txt
 ```
 - Finally run the following command in the command line to check whether everything is working fine or not.
 ```console
-python3 Jira-Lens.py -u {URL}
+python3 Jira-Lens/Jira-Lens.py -u {URL} -o path-to-output-file
 ```
 
 ![render1636911439843](https://user-images.githubusercontent.com/29165227/141692149-7b68504e-410d-43a5-b20e-d8c9963d260d.gif)
@@ -77,7 +82,7 @@ git clone https://github.com/MayankPandey01/Jira-Lens.git
 
 ## 🧪 Recommended Python Version:
 - This Tool Only Supports Python 3.
-- The recommended version for Python 3 is 3.8.x.
+- The recommended version for Python 3 is 3.8.x or above.
 
 ## ⛳ Dependencies:
 
