@@ -25,10 +25,28 @@ Jira is a proprietary issue tracking product developed by Atlassian that allows 
 This tool Performs 25+ Checks including CVE's and Multiple Disclosures on the Provided JIRA Instance.
 
 # 🚀 Usage
-Jira-Lens can be easily  used from the command line 
-- Clone this Repo Using ` git clone https://github.com/MayankPandey01/Jira-Lens.git`
-- Complete the setup using `python3 setup.py install`
-- `python3 Jira-Lens.py -u {URL}`
+Jira-Lens can be easily used from the command line 
+- Clone this Repo Using 
+```console
+git clone https://github.com/MayankPandey01/Jira-Lens.git
+```
+Change the directory using 
+```console
+cd Jira-Lens
+```
+- You can complete the setup either using this
+```console
+sudo python3 setup.py install
+pip3 install progressbar colorama requests
+```
+**OR**
+```console
+pip3 install -r requirements.txt
+```
+- Finally run the following command in the command line to check whether everything is working fine or not.
+```console
+python3 Jira-Lens/Jira-Lens.py -u {URL} -o path-to-output-file
+```
 
 ![render1636911439843](https://user-images.githubusercontent.com/29165227/141692149-7b68504e-410d-43a5-b20e-d8c9963d260d.gif)
 
@@ -57,25 +75,28 @@ pip install Jira-Lens
 ```
 
 ## 🔨 Using Git
-```console
+```console 
 git clone https://github.com/MayankPandey01/Jira-Lens.git
 ```
 - After Installation process, run the **setup.py** file to set up the tool.
 
 ## 🧪 Recommended Python Version:
 - This Tool Only Supports Python 3.
-- The recommended version for Python 3 is 3.8.x.
+- The recommended version for Python 3 is 3.8.x or above.
 
 ## ⛳ Dependencies:
 
 The dependencies can be installed using the requirements file:
 
 Installation on Windows:  ![](https://camo.githubusercontent.com/920e3f8eb007a3834e641d27fddb9c102da3fd0c619785b52efb4dabcef2da1c/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f776f726b666c6f772f7374617475732f6369706865792f6369706865792f507974686f6e2532306170706c69636174696f6e3f6c6162656c3d57696e646f7773)
-- python.exe -m pip3 install -r requirements.txt.
+```console
+python.exe -m pip3 install -r requirements.txt
+```
 
 Installation on Linux: ![](https://camo.githubusercontent.com/973cbf24b31b5d10c7f8d4f65fda4c696de8d3bed0923536820f9ac262b8ad08/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f776f726b666c6f772f7374617475732f6369706865792f6369706865792f507974686f6e2532306170706c69636174696f6e3f6c6162656c3d4c696e7578)
-- sudo python3 pip3 install -r requirements.txt.
-
+```console
+sudo python3 pip3 install -r requirements.txt
+```
 
 ## 🐞 Bug Bounties
 
@@ -114,13 +135,3 @@ Happy Hacking ✨✨
 ## 📃 Licensing
 
 This project is licensed under the MIT license.
-
-
-
-
-
-
-
-
-
-
