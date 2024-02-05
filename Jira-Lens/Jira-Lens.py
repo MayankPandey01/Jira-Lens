@@ -284,7 +284,7 @@ def CVE_2019_3396(base_url): #(Path Traversal & RCE):
 
 def CVE_2020_36287(base_url,ii):
     try:
-        r=requests.get(f"{base_url}/rest/dashboards/1.0/10000/gadget/{ii}/prefs")
+        r=requests.get(f"{base_url}/rest/dashboards/1.0/10000/gadget/{ii}/prefs",verify=verify_ssl)
         if r.status_code==200:
             if "userPrefsRepresentation" in str(r.content):
                 response_CVE_2020_36287.append(f"{base_url}/rest/dashboards/1.0/10000/gadget/{ii}/prefs\n")
@@ -403,7 +403,7 @@ def dev_mode(base_url):
 
 
 def Unauth_User_picker(base_url):
-    r=requests.get(f"{base_url}/secure/popups/UserPickerBrowser.jspa",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/secure/popups/UserPickerBrowser.jspa",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code != 200:
         print(f"{GRAY}[-] User Picker Disabled{RESET}\n")
     else:
@@ -413,7 +413,7 @@ def Unauth_User_picker(base_url):
 
 
 def Unauth_Group_Picker(base_url):
-    r=requests.get(f"{base_url}/rest/api/2/groupuserpicker", allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/rest/api/2/groupuserpicker", allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code ==200:
         if "You are not authenticated. Authentication required to perform this operation." in str(r.content):
             print(f"{GRAY}[-] REST GroupUserPicker is not available\n")
@@ -426,7 +426,7 @@ def Unauth_Group_Picker(base_url):
 
 
 def Unauth_Resolutions(base_url):
-    r=requests.get(f"{base_url}/rest/api/2/resolution",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/rest/api/2/resolution",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code ==200:
         if 'self' or 'description' or 'name' in str(r.content):
             print(f"{RED}[+] {CYAN} [INFO] {RESET} Resolutions Found : {base_url}/rest/api/2/resolution\n")
@@ -441,7 +441,7 @@ def Unauth_Resolutions(base_url):
 
 
 def Unauth_Projects(base_url):
-    r=requests.get(f"{base_url}/rest/api/2/project?maxResults=100",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/rest/api/2/project?maxResults=100",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code ==200:
         if 'projects' and 'startAt' and 'maxResults' in str(r.content):
             print(f"{RED}[+] {GREEN}[LOW] {RESET}Projects Found : {base_url}/rest/api/2/project?maxResults=100\n")
@@ -453,7 +453,7 @@ def Unauth_Projects(base_url):
 
 
 def Unauth_Project_categories(base_url):
-    r=requests.get(f"{base_url}/rest/api/2/projectCategory?maxResults=1000",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/rest/api/2/projectCategory?maxResults=1000",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code ==200:
         if 'self' or 'description' or 'name' in str(r.content):
             print(f"{RED}[+] {GREEN}[LOW]{RESET} Project Groups Found : {base_url}/rest/api/2/projectCategory?maxResults=1000\n")
@@ -465,7 +465,7 @@ def Unauth_Project_categories(base_url):
 
 
 def Unauth_Dashboard(base_url):
-    r=requests.get(f"{base_url}/rest/api/2/dashboard?maxResults=100",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/rest/api/2/dashboard?maxResults=100",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code ==200:
         if 'dashboards' and 'startAt' and 'maxResults' in str(r.content):
             print(f"{RED}[+] {CYAN}[INFO]{RESET} Found Unauthenticated DashBoard Access{RESET} : {base_url}/rest/api/2/dashboard?maxResults=100\n")
@@ -478,7 +478,7 @@ def Unauth_Dashboard(base_url):
 
 
 def Unauth_Dashboard_Popular(base_url):
-    r=requests.get(f"{base_url}/secure/ManageFilters.jspa?filter=popular&filterView=popular",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/secure/ManageFilters.jspa?filter=popular&filterView=popular",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code ==200:
         if 'Popular Filters' in str(r.content):
             print(f"{RED}[+] {CYAN}[INFO]{RESET} Filters Accessible : {base_url}/secure/ManageFilters.jspa?filter=popular&filterView=popular\n")
@@ -490,7 +490,7 @@ def Unauth_Dashboard_Popular(base_url):
 
 
 def Unauth_Dashboard_admin(base_url):
-    r=requests.get(f"{base_url}/rest/menu/latest/admin",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/rest/menu/latest/admin",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code ==200:
         if 'key' and 'link' and 'label' and 'self' in str(r.content):
             print(f"{RED}[+] {CYAN}[INFO] {RESET} Admin Project Dashboard Accessible : {base_url}/rest/menu/latest/admin\n")
@@ -504,7 +504,7 @@ def Unauth_Dashboard_admin(base_url):
 
 def Service_desk_signup(base_url):
     body='{"email":"invalid","signUpContext":{},"secondaryEmail":"","usingNewUi":true}'
-    r=requests.get(f"{base_url}/servicedesk/customer/user/signup",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/servicedesk/customer/user/signup",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code ==200 :
         if "Service Management" in str(r.content):
             print(f"{RED}[+] {GREEN}[MEDIUM]{RESET} Service Desk Signup Enabled : {base_url}/servicedesk/customer/user/signup{RESET}\n")
@@ -514,7 +514,7 @@ def Service_desk_signup(base_url):
 
 
 def Unauth_Install_Gadgets(base_url):
-    r=requests.get(f"{base_url}/rest/config/1.0/directory")
+    r=requests.get(f"{base_url}/rest/config/1.0/directory",verify=verify_ssl)
     if r.status_code ==200 :
         if "jaxbDirectoryContents" in str(r.content):
             print(f"{RED}[+] {GREEN}[LOW]{RESET} REST Gadegts Accessible : {base_url}/rest/config/1.0/directory{RESET}\n")
@@ -525,7 +525,7 @@ def Unauth_Install_Gadgets(base_url):
 
 
 def FieldNames_QueryComponentJql(base_url):
-    r=requests.get(f"{base_url}/secure/QueryComponent!Jql.jspa?jql=",allow_redirects=False,headers=headers)
+    r=requests.get(f"{base_url}/secure/QueryComponent!Jql.jspa?jql=",allow_redirects=False,headers=headers,verify=verify_ssl)
     if r.status_code ==200:
         if "searchers" in str(r.content):
             print(f"{RED}[+] {GREEN}[LOW] {RESET}Found Query Component Fields : {base_url}/secure/QueryComponent!Jql.jspa?jql=\n")
@@ -537,7 +537,7 @@ def FieldNames_QueryComponentJql(base_url):
 
 
 def Unauth_Screens(base_url):
-    r=requests.get(f"{base_url}/rest/api/2/screens",allow_redirects=False)
+    r=requests.get(f"{base_url}/rest/api/2/screens",allow_redirects=False,verify=verify_ssl)
     if r.status_code==200:
         if "id" or "name" or "description" in str(r.content):
             print(f"{RED}[+] {GREEN}[LOW] {RESET} Unauthenticated Access To Screens : {base_url}/rest/api/2/screens\n")
